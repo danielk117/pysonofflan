@@ -85,10 +85,16 @@ pass_config = click.make_pass_decorator(dict, ensure=True)
     required=False,
     help="time to wait for listen.",
 )
+@click.option(
+    "--outlet",
+    envvar="PYSONOFFLAN_outlet",
+    required=False,
+    help="Outlet to be used.",
+)
 @click.pass_context
 @click_log.simple_verbosity_option(logger, "--loglevel", "-l")
 @click.version_option()
-def cli(ctx, host, device_id, api_key, inching, wait):
+def cli(ctx, host, device_id, api_key, inching, wait, outlet):
     """A cli tool for controlling Sonoff Smart Switches/Plugs in LAN Mode."""
     if ctx.invoked_subcommand == "discover":
         return
@@ -104,6 +110,7 @@ def cli(ctx, host, device_id, api_key, inching, wait):
         "api_key": api_key,
         "inching": inching,
         "wait": wait,
+        "outlet": outlet,
     }
 
 
@@ -145,6 +152,7 @@ def state(config: dict):
         logger=logger,
         device_id=config["device_id"],
         api_key=config["api_key"],
+        outlet=int(config["outlet"]) if config["outlet"] else None,
     )
 
 
@@ -196,6 +204,7 @@ def listen(config: dict):
         logger=logger,
         device_id=config["device_id"],
         api_key=config["api_key"],
+        outlet=int(config["outlet"]) if config["outlet"] else None,
     )
 
 
@@ -254,6 +263,7 @@ def switch_device(config: dict, inching, new_state):
         logger=logger,
         device_id=config["device_id"],
         api_key=config["api_key"],
+        outlet=int(config["outlet"]) if config["outlet"] else None,
     )
 
 
